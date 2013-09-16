@@ -461,3 +461,40 @@ thead {
 .delete-popvoer .btn {
     float: none;
 }
+
+.flag {
+    width: 16px;
+    height: 11px;
+    background:url('../img/flags.png') no-repeat
+}
+
+.flag.flag-gb {background-position: -16px 0}
+.flag.flag-pl {background-position: 0 -11px}
+
+.lang-dropdown span {
+    padding-left: 22px;
+}
+
+.ui-pnotify-icon {
+    margin-top: 3px;
+}
+
+#user_isActive {
+    display: inline;
+}
+
+.icon-large.icon-asterisk {
+    background-position: -184px -93px;
+}
+
+#user_isActive {
+    display: inline;
+}
+
+.cell-center {
+    text-align: center !important;
+}
+
+.cell-center a {
+    margin-top: 10px;
+}

@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use CatMS\AdminBundle\Entity\ContentManager;
 use CatMS\AdminBundle\Form\ContentManagerType;
-use CatMS\AdminBundle\Controller\CommonMethods;
+use CatMS\AdminBundle\Utility\CommonMethods;
 use CatMS\AdminBundle\Logger\History;
 use CatMS\AdminBundle\Entity\ContentArchive;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,7 +29,7 @@ class ContentManagerController extends Controller
         
         $dql = "SELECT cm FROM CatMSAdminBundle:ContentManager cm 
                 JOIN cm.contentGroup cg WHERE cg.slug = :slug 
-                ORDER BY cm.priority ASC";
+                ORDER BY cm.createdAt DESC";
         
         $group = $em->getRepository('CatMSAdminBundle:ContentGroup')
             ->findOneBySlug($slug);
