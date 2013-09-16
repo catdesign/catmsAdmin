@@ -8,7 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use CatMS\AdminBundle\Entity\ImageUpload;
-use CatMS\AdminBundle\Controller\CommonMethods;
+use CatMS\AdminBundle\Utility\CommonMethods;
 use CatMS\AdminBundle\Logger\History;
 use Symfony\Component\HttpFoundation\Response;
 use CatMS\AdminBundle\Entity\ImageGroup;
@@ -115,13 +115,14 @@ class MediaLibraryController extends Controller
             $groupEntity = null;
         }
         
+        
         if ($this->getRequest()->isMethod('POST')) {
 
             $form->bind($this->getRequest());
-
-            if ($form->isValid()) {
+            
+            $formFile = $this->getRequest()->files->get('form');
+            if ($form->isValid() && is_object($formFile['file'])) {
                 $em = $this->getDoctrine()->getManager();
-                
                 
                 $files = $this->getRequest()->files->get('form');
                 if ($files['file'] == null) {
@@ -135,14 +136,19 @@ class MediaLibraryController extends Controller
                     $this->get('session')->getFlashBag()
                         ->add('noticeSuccess', 'upload.success');
                 }
-                
+
                 if ($group) {
                     return $this->redirect(
-                        $this->generateUrl('media-library', 
-                            array('page' => 1, 'slug' => $group)
+                        $this->generateUrl('media-library-image-edit', 
+                            array(
+                                'id' => $document->getId(), 
+                                'group' => $document->getImageGroup()->getSlug()
+                            )
                         ));
                 } else {
-                    return $this->redirect($this->generateUrl('media-library'));
+                    return $this->redirect($this->generateUrl('media-library-image-edit',
+                        array('id' =>  $document->getId())
+                    ));
                 }
                 
             } else {
@@ -286,7 +292,9 @@ class MediaLibraryController extends Controller
             array(
                 'group' => $group,
                 'form' => $form->createView(), 
-                'image' => $image
+                'image' => $image,
+                'delete_form' => $this->createDeleteForm($image->getId())
+                    ->createView()
             )
         );
     }

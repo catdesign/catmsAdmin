@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use CatMS\AdminBundle\Entity\Setting;
 use CatMS\AdminBundle\Form\SettingType;
+use CatMS\AdminBundle\Utility\CommonMethods;
 
 /**
  * Setting controller.
@@ -100,9 +101,12 @@ class SettingController extends Controller
         $dql   = "SELECT s FROM CatMSAdminBundle:Setting s WHERE s.range = :range";
         $query = $em->createQuery($dql);
         $query->setParameter('range', 'Panel');
-        
-        $recordsPerPage = $this->castRecordsPerPage($em->getRepository('CatMSAdminBundle:Setting')->findOneBySlug('settings-panel-list-records-per-page'));
 
+        $recordsPerPage = CommonMethods::castRecordsPerPage(
+        $em->getRepository('CatMSAdminBundle:Setting')
+            ->findOneBySlug('settings-panel-list-records-per-page'), 
+        $this->container);
+        
         $paginator  = $this->get('knp_paginator');
   
         $pagination = $paginator->paginate($query, 
@@ -119,14 +123,6 @@ class SettingController extends Controller
         ));
     }
     
-    private function castRecordsPerPage($recordsPerPage)
-    {
-        if (null === $recordsPerPage || $recordsPerPage->getValue() == 0) {
-            return $this->container->getParameter('knp_paginator.page_range');
-        } else {
-            return (int)$recordsPerPage->getValue();
-        }
-    }
     
     /**
      * Lists all Frontend Setting entities.
@@ -145,8 +141,11 @@ class SettingController extends Controller
         $dql   = "SELECT s FROM CatMSAdminBundle:Setting s WHERE s.range = :range";
         $query = $em->createQuery($dql);
         $query->setParameter('range', 'Frontend');
-        
-        $recordsPerPage = $this->castRecordsPerPage($em->getRepository('CatMSAdminBundle:Setting')->findOneBySlug('settings-panel-list-records-per-page'));
+
+        $recordsPerPage = CommonMethods::castRecordsPerPage(
+        $em->getRepository('CatMSAdminBundle:Setting')
+            ->findOneBySlug('settings-panel-list-records-per-page'), 
+        $this->container);        
         
         $paginator  = $this->get('knp_paginator');
        
