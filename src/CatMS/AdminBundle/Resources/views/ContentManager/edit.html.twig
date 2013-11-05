@@ -1,14 +1,4 @@
 {% extends 'CatMSAdminBundle::base.html.twig' %}   
-
-{% block javascripts_bottom %}
-    {% if not is_granted('ROLE_DEVELOPER') %}
-    <script>
-        $(function(){
-            $('.checkDeveloper').attr('readonly', 'readonly');
-        });
-    </script>
-    {% endif %}
-{% endblock %}
    
 {% block breadcrumb %}
     {{ parent() }}
@@ -54,7 +44,7 @@
     <form action="{{ path('content-manager-delete', { 'id': entity.id, 'group': entity.contentGroup.slug }) }}" method="post" style="float: right;">
         <input type="hidden" name="_method" value="DELETE" />
         {{ form_widget(delete_form) }}
-        <button type="submit" data-view="top" class="btn btn-small btn-warning remove-this"><i class="icon-trash"></i> {{ 'global.delete' | trans }}</button>
+        <button type="submit" data-view="top" class="btn btn-small btn-warning remove-this-form"><i class="icon-trash"></i> {{ 'global.delete' | trans }}</button>
     </form>
     
     {% if entity.contentGroup.manual %}
@@ -65,3 +55,22 @@
     {% endif %}
     
 {% endblock %}
+    
+{% block javascripts %}    
+    <script src="{{ asset('js/catms/views/ContentView.js') }}"></script>
+    <script>
+        $(function() {
+            var contentView = new ContentView();
+        });
+    </script>
+{% endblock %}
+    
+{% block javascripts_bottom %}
+    {% if not is_granted('ROLE_DEVELOPER') %}
+    <script>
+        $(function(){
+            $('.checkDeveloper').attr('readonly', 'readonly');
+        });
+    </script>
+    {% endif %}
+{% endblock %}    

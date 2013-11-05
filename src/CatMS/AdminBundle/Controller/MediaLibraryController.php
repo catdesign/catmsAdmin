@@ -171,12 +171,12 @@ class MediaLibraryController extends Controller
      * @param string $group Image group slug
      */
     public function deleteImageAction(Request $request, ImageUpload $image, $group)
-    {  
+    {
         $form = $this->createDeleteForm($image->getId());
         $form->bind($request);
         
         if ($form->isValid()) {      
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
 
             if (!$image) {
                 throw $this->createNotFoundException(
@@ -193,7 +193,7 @@ class MediaLibraryController extends Controller
                 ->add('noticeSuccess', 'remove.success');
         } else {
             $this->get('session')->getFlashBag()
-                ->add('noticFailure', 'delete.error');
+                ->add('noticeFailure', 'delete.error');
         }
 
         return $this->redirect($this->generateUrl(
@@ -225,7 +225,7 @@ class MediaLibraryController extends Controller
      */
     public function editImageAction(ImageUpload $image, $group)
     {   
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         
         if (!$image) {
             throw $this->createNotFoundException('Unable to find Image entity.');
@@ -301,7 +301,7 @@ class MediaLibraryController extends Controller
     
     private function getGroups()
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $objs = $em->getRepository('CatMSAdminBundle:ImageGroup')
             ->findBy(array(), array('slug' => 'asc'));
         
@@ -328,7 +328,7 @@ class MediaLibraryController extends Controller
             $removed = array();
             
             foreach ($data as $key => $id) {
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $image = $em->getRepository('CatMSAdminBundle:ImageUpload')
                     ->find($id);
                 

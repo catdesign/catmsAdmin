@@ -88,7 +88,7 @@ class ContentManagerController extends Controller
             ));
         } else {
             $this->get('session')->getFlashBag()
-                ->add('noticeError', 'create.error');
+                ->add('noticeFailure', 'create.error');
         }
 
         return array(
@@ -107,7 +107,7 @@ class ContentManagerController extends Controller
     {
         $entity = new ContentManager();
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $contentGroup = $em->getRepository('CatMSAdminBundle:ContentGroup')
             ->findOneBySlug($group);
 
@@ -289,14 +289,21 @@ class ContentManagerController extends Controller
 
             $em->remove($entity);
             $em->flush();
+            
+            $this->get('session')->getFlashBag()
+                ->add('noticeSuccess', 'remove.success');            
+            
+        } else {
+            $this->get('session')->getFlashBag()
+                ->add('noticeFailure', 'remove.error');            
         }
 
         return $this->redirect(
-                $this->generateUrl('content-manager-list', array(
-                    'page' => 1, 
-                    'slug' => $group
-                ))
-            );
+            $this->generateUrl('content-manager-list', array(
+                'page' => 1,
+                'slug' => $group
+            ))
+    );
     }
 
     /**
